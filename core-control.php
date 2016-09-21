@@ -326,9 +326,9 @@ final class Core_Control {
 						continue;
 					}
 					
-					$url   = admin_url( 'tools.php?page=core-control&module=' . $module['id'] );
-					$title = ! empty( $module['title'] ) ? esc_html( $module['title'] ) : esc_html( __('Module title unavailable', 'core-control' ) );
-					$sep   = $module_filename === end( $modules ) ? '' : ' | ';
+					$url     = admin_url( 'tools.php?page=core-control&module=' . $module['id'] );
+					$title   = ! empty( $module['title'] ) ? esc_html( $module['title'] ) : esc_html( __('Module title unavailable', 'core-control' ) );
+					$sep     = $module['id'] === end( $modules )['id'] ? '' : ' | ';
 					$current = $current_module === $module['id'] ? ' class="current"' : '';
 					echo "<li><a href='$url'$current>$title</a>$sep</li>";
 				}
