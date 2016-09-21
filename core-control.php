@@ -252,6 +252,25 @@ final class Core_Control {
 			return false;
 		}
 	}
+
+	/**
+	 * Is valid module.
+	 *
+	 * Takes in the filename of a module and returns a boolean of if it's a module.
+	 *
+	 * @access public
+	 * @since 1.3.0
+	 *
+	 * @param  string Filename of module.
+	 * @return bool   Is module valid.
+	 */
+	public function is_valid_module( $module ) {
+		if ( ! empty ( $this->get_modules() ) ) {
+			return in_array( $module, $this->get_modules() );
+		} else {
+			return false;
+		}
+	}
 	
 	/**
 	 * Outputs Core Control settings pages.
@@ -266,7 +285,7 @@ final class Core_Control {
 	public function main_page() {
 		echo '<div class="wrap">';
 			screen_icon( 'tools' );
-			echo '<h2>' . __( 'Core Control', 'core-control') . '</h2>';
+			echo '<h2>' . __( 'Core Control', 'core-control' ) . '</h2>';
 		
 			$module = ! empty( $_GET['module'] ) ? $_GET['module'] : '';
 			if ( ! $module || ! $this->is_module_active( $module ) ) {
@@ -274,12 +293,11 @@ final class Core_Control {
 			}
 			
 			$menus = array( array('default', 'Main Page') );
-			foreach ( $this->modules as $a_module ) {
-				if ( ! $a_module->has_page() )
-					continue;
+			foreach ( $this->get_modules() as $a_module ) {
 				$menus[] = $a_module->menu();
 			}
 			echo '<ul class="subsubsub">';
+				
 			foreach ( $menus as $menu ) {
 				$url = 'tools.php?page=core-control';
 				if ( 'default' != $menu[0] )
@@ -306,40 +324,56 @@ final class Core_Control {
 	 * @return void
 	 */
 	public function module_selection_page() {
-		$files = $this->find_files( WP_PLUGIN_DIR . '/' . $this->folder . '/modules/', array('pattern' => '*.php', 'levels' => 1, 'relative' => true) );
-?>
-<p>Welcome to Core Control, Please select the subsection from the above menu which you would like to modify</p>
-<p>You may Enable/Disable which modules are loaded by checking them in the following list:
-<form method="post" action="admin-post.php?action=core_control-modules">
-<table class="widefat">
-	<thead>
-	<tr>
-		<th scope="col" class="check-column"><input type="checkbox" name="check-all" /></th>
-		<th scope="col">Module Name</th>
-		<th scope="col">Description</th>
-	</tr>
-	</thead>
-	<tbody>
-	<?php
-		foreach ( $files as $module ) {
-			$details = get_plugin_data(WP_PLUGIN_DIR . '/' . $this->folder . '/modules/' . $module, true, false);
-			$active = $this->is_module_active($module);
-			$style = $active ? ' style="background-color: #e7f7d3"' : '';
-	?>
-	<tr<?php echo $style ?>>
-		<th scope="row" class="check-column"><input type="checkbox" name="checked[]" value="<?php echo esc_attr($module) ?>" <?php checked($active); ?> /></th>
-		<td><?php echo $details['Title'] . ' ' . $details['Version'] ?></td>
-		<td><?php echo $details['Description'] ?></td>
-	</tr>
-	<?php
-		} //end foreach;
-	?>
-	</tbody>
-</table>
-<input type="submit" class="button-secondary" value="Save Module Choices" />
-</p>
-</form>
-<?php
+		$modules = $this->get_modules();
+		?>
+		<p><?php echo esc_html( __( 'Welcome to Core Control, Please select the subsection from the above menu which you would like to modify', 'core-control' ) ); ?></p>
+		<p><?php echo esc_html( __( 'You may Enable/Disable which modules are loaded by checking them in the following list:', 'core-control' ) ); ?></p>
+		<form method="post" action="admin-post.php?action=core_control-modules">
+		<table class="widefat">
+			<thead>
+			<tr>
+				<th scope="col" class="check-column"><input type="checkbox" name="check-all" /></th>
+				<th scope="col"><?php echo esc_html( __( 'Module Name', 'core-control' ) ); ?></th>
+				<th scope="col"><?php echo esc_html( __( 'Description', 'core-control' ) ); ?></th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php
+				foreach ( $modules as $module_file => $module ) {
+					$active = $this->is_module_active( $module );
+					$style = $active ? ' style="background-color: #e7f7d3"' : '';
+			?>
+			<tr<?php echo $style ?>>
+				<th scope="row" class="check-column"><input type="checkbox" name="checked[]" value="<?php echo esc_attr( $module_file ) ?>" <?php checked( $active ); ?> /></th>
+				<td>
+					<?php
+					if ( ! empty( $module['title'] ) ) {
+						echo esc_html( $module['title'] );
+					} else {
+						echo __( 'Module title not available', 'core-control' );
+					}
+					?>
+				</td>
+				<td>
+					<?php
+					if ( ! empty( $module['description'] ) ) {
+						echo esc_html( $module['description'] );
+					} else {
+						echo __( 'Module description not available', 'core-control' );
+					}
+					?>
+				</td>
+			</tr>
+			<?php
+				} //end foreach;
+			?>
+			</tbody>
+			</table>
+			<?php wp_nonce_field( 'core-control-settings-nonce', 'core-control-settings-nonce' ); ?>
+			<?php submit_button( __( 'Save Module Choices', 'core-control' ), 'primary', 'core-control-module-settings-submit', false ); ?>
+			</p>
+			</form>
+		<?php
 	}
 
 	/**
@@ -353,16 +387,30 @@ final class Core_Control {
 	 * @return void
 	 */
 	public function save_module_selections() {
-		$checked = isset( $_POST['checked'] ) ? stripslashes_deep( (array)$_POST['checked'] ) : array();
 
-		foreach ( $checked as $index => $module ) {
-			if ( 0 !== validate_file($module) ||
-				! file_exists(WP_PLUGIN_DIR . '/' . $this->folder . '/modules/' . $module) )
-					unset($checked[$index]);
+		// Check if user pressed the save button and nonce is valid
+		if ( ! isset( $_POST['core-control-module-settings-submit'] ) ) {
+			return;
 		}
 
-		update_option('core_control-active_modules', $checked);
-		wp_redirect( admin_url('tools.php?page=core-control') );
+		if ( ! wp_verify_nonce( $_POST['core-control-settings-nonce'], 'core-control-settings-nonce' ) ) {
+			return;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$checked = isset( $_POST['checked'] ) ? stripslashes_deep( (array) $_POST['checked'] ) : array();
+
+		foreach ( $checked as $index => $module ) {
+			if ( ! $this->is_valid_module( $module ) ) {
+				unset( $checked[ $index ] );
+			}
+		}
+
+		update_option( 'core_control-active_modules', $checked);
+		wp_redirect( admin_url( 'tools.php?page=core-control' ) );
 	}
 
 	/**
