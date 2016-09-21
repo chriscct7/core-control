@@ -287,29 +287,30 @@ final class Core_Control {
 			screen_icon( 'tools' );
 			echo '<h2>' . esc_html( __( 'Core Control', 'core-control' ) ) . '</h2>';
 		
-			$module = ! empty( $_GET['module'] ) ? $_GET['module'] : '';
+			$current_module = ! empty( $_GET['module'] ) ? $_GET['module'] : '';
 			if ( ! $module || ! $this->is_module_active( $module ) ) {
-				$module = 'default';
+				$current_module = 'default';
 			}
 			
-			$menus = array( array('default', 'Main Page') );
-			foreach ( $this->get_modules() as $a_module ) {
-				$menus[] = $a_module->menu();
-			}
 			echo '<ul class="subsubsub">';
-				
-			foreach ( $menus as $menu ) {
-				$url = 'tools.php?page=core-control';
-				if ( 'default' != $menu[0] )
-					$url .= '&module=' . $menu[0];
-				$title = $menu[1];
-				$sep = $menu == end($menus) ? '' : ' | ';
-				$current = $module == $menu[0] ? ' class="current"' : '';
-				echo "<li><a href='$url'$current>$title</a>$sep</li>";
-			}
+				$current = $current_module === 'default' ? ' class="current"' : '';
+				echo "<li><a href='" . admin_url( 'tools.php?page=core-control' ) . "'" . $current . ">" . esc_html( __( 'Main Page', 'core-control' ) ) . "</a>|</li>";
+
+				$modules = $this->get_modules();
+				foreach ( $modules as $module_filename => $module ) {
+					if ( empty( $module['id'] ) ) {
+						continue;
+					}
+					
+					$url   = admin_url( 'tools.php?page=core-control&module=' . $module['id'] );
+					$title = ! empty( $module['title'] ) ? esc_html( $module['title'] ) : esc_html( __('Module title unavailable', 'core-control' ) );
+					$sep   = $module_filename === end( $modules ) ? '' : ' | ';
+					$current = $current_module === $module['id'] ? ' class="current"' : '';
+					echo "<li><a href='$url'$current>$title</a>$sep</li>";
+				}
 			echo '</ul>';
 			echo '<br class="clear" />';
-			do_action('core_control-' . $module);
+			do_action( 'core_control-' . $current_module );
 		echo '</div>';
 	}
 
