@@ -1,12 +1,4 @@
 <?php
-/*
-Plugin Name: Filesystem Module
-Version: 1.1
-Description: Core Control Filesystem module, This allows you to Enable/Disable the different Filesystem access methods which WordPress supports for upgrades
-Author: Dion Hulse
-Author URI: https://dd32.id.au/
-*/
-
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

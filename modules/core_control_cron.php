@@ -1,12 +1,4 @@
 <?php
-/*
-Plugin Name: Cron Module
-Version: 1.2
-Description: Core Control Cron module, This allows you to manually run WordPress Cron Jobs and to diagnose Cron issues.
-Author: Dion Hulse
-Author URI: https://dd32.id.au/
-*/
-
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

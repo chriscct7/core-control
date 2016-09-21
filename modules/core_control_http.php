@@ -1,12 +1,4 @@
 <?php
-/*
-Plugin Name: HTTP Access Module
-Version: 1.0
-Description: Core Control HTTP module, This allows you to Enable/Disable the different HTTP Access methods which WordPress 2.7+ supports
-Author: Dion Hulse
-Author URI: https://dd32.id.au/
-*/
-
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -1,12 +1,4 @@
 <?php
-/*
-Plugin Name: Updates Module
-Version: 1.1
-Description: Core Control Updates module, This allows you to Disable Plugin/Theme/Core update checking, or to force a check to take place.
-Author: Dion Hulse
-Author URI: https://dd32.id.au/
-*/
-
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
