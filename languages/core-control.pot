@@ -1,0 +1,199 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: Core Control\n"
+"POT-Creation-Date: 2016-09-21 01:49-0400\n"
+"PO-Revision-Date: 2015-09-09 19:25-0400\n"
+"Last-Translator: Chris Christoff <hello@chriscct7.com>\n"
+"Language-Team: Dion Hulse <contact@dd32.id.au>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.9\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: core-control.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#. Plugin Name of the plugin/theme
+#: core-control.php:178 core-control.php:343
+msgid "Core Control"
+msgstr ""
+
+#: core-control.php:198
+msgid "Cron Module"
+msgstr ""
+
+#: core-control.php:199
+msgid "Cron Tasks"
+msgstr ""
+
+#: core-control.php:200
+msgid ""
+"This allows you to manually run WordPress Cron Jobs and to diagnose Cron "
+"issues."
+msgstr ""
+
+#: core-control.php:206
+msgid "Filesystem Module"
+msgstr ""
+
+#: core-control.php:207
+msgid "Filesystem Access"
+msgstr ""
+
+#: core-control.php:208
+msgid ""
+"This allows you to Enable/Disable the different Filesystem access methods "
+"which WordPress supports for upgrades."
+msgstr ""
+
+#: core-control.php:214
+msgid "HTTP Module"
+msgstr ""
+
+#: core-control.php:215
+msgid "External HTTP Access"
+msgstr ""
+
+#: core-control.php:216
+msgid ""
+"This allows you to Enable/Disable the different HTTP Access methods which "
+"WordPress 4.0+ supports."
+msgstr ""
+
+#: core-control.php:222
+msgid "HTTP Log Module"
+msgstr ""
+
+#: core-control.php:223
+msgid "External HTTP Access Logger"
+msgstr ""
+
+#: core-control.php:224
+msgid "This allows you to Log external connections which WordPress makes."
+msgstr ""
+
+#: core-control.php:230
+msgid "Updates Module"
+msgstr ""
+
+#: core-control.php:231
+msgid "Plugin, Theme, and Core Updates"
+msgstr ""
+
+#: core-control.php:232
+msgid ""
+"This allows you to Disable Plugin/Theme/Core update checking, or to force a "
+"check to take place."
+msgstr ""
+
+#: core-control.php:354
+msgid "Main Page"
+msgstr ""
+
+#: core-control.php:362
+msgid "Module title unavailable"
+msgstr ""
+
+#: core-control.php:386
+msgid ""
+"Welcome to Core Control, Please select the subsection from the above menu "
+"which you would like to modify"
+msgstr ""
+
+#: core-control.php:387
+msgid ""
+"You may Enable/Disable which modules are loaded by checking them in the "
+"following list:"
+msgstr ""
+
+#: core-control.php:393
+msgid "Module Name"
+msgstr ""
+
+#: core-control.php:394
+msgid "Description"
+msgstr ""
+
+#: core-control.php:410
+msgid "Module title not available"
+msgstr ""
+
+#: core-control.php:419
+msgid "Module description not available"
+msgstr ""
+
+#: core-control.php:431
+msgid "Save Module Choices"
+msgstr ""
+
+#: core-control.php:489
+#, php-format
+msgid ""
+"Sorry, but your version of WordPress does not meet Core Control's required "
+"version of 4.0 to run properly. The plugin not been activated. %1$sClick "
+"here to return to the Dashboard%2$s."
+msgstr ""
+
+#: core-control.php:511
+#, php-format
+msgid ""
+"Sorry, but your version of PHP does not meet Core Control's required version "
+"of 5.2.4 to run properly. The plugin not been activated. %1$sClick here to "
+"return to the Dashboard%2$s."
+msgstr ""
+
+#: core-control.php:542
+#, php-format
+msgid ""
+"Sorry, but your version of WordPress does not meet Core Control's required "
+"version of %1$s4.0%2$s to run properly. The plugin not been activated. "
+"%3$sClick here to return to the Dashboard%4$s."
+msgstr ""
+
+#: core-control.php:547
+#, php-format
+msgid ""
+"Sorry, but your version of PHP does not meet Core Control's required version "
+"of %1$s5.2.4%2$s to run properly. The plugin not been activated. %3$sClick "
+"here to return to the Dashboard%4$s."
+msgstr ""
+
+#: modules/core_control_cron.php:80
+msgid "An error occured"
+msgstr ""
+
+#: modules/core_control_cron.php:82
+msgid "The selected task has been canceled"
+msgstr ""
+
+#: modules/core_control_cron.php:84
+msgid "The selected task has been run"
+msgstr ""
+
+#: modules/core_control_http_log.php:25
+msgid "Core Control: HTTP Logger data"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://dd32.id.au/wordpress-plugins/core-control/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"Core Control is a set of plugin modules which can be used to control certain "
+"aspects of the WordPress control."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Dion Hulse"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://dd32.id.au/"
+msgstr ""
