@@ -200,7 +200,7 @@ final class Core_Control {
 
 		// Filesystem Module
 		$modules['core_control_filesystem.php'] = array(
-			'id' 		  => 'filesystem',
+			'id' 		  => 'fs',
 			'title' 	  => __( 'Filesystem Module', 'core-control' ),
 			'menu'  	  => __( 'Filesystem Access', 'core-control' ),
 			'description' => __( 'This allows you to Enable/Disable the different Filesystem access methods which WordPress supports for upgrades.' , 'core-control' ),
@@ -216,7 +216,7 @@ final class Core_Control {
 
 		// HTTP Log Module
 		$modules['core_control_http_log.php'] = array(
-			'id' 		  => 'httplog',
+			'id' 		  => 'http_log',
 			'title' 	  => __( 'HTTP Log Module', 'core-control' ),
 			'menu'  	  => __( 'External HTTP Access Logger', 'core-control' ),
 			'description' => __( 'This allows you to Log external connections which WordPress makes.' , 'core-control' ),
