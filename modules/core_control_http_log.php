@@ -34,14 +34,6 @@ class Core_Control_HTTP_Log {
 										'rewrite' => false,
 									));
 	}
-
-	function has_page() {
-		return true;
-	}
-
-	function menu() {
-		return array('http_log', 'External HTTP Access Logger');
-	}
 	
 	function timer_start() {
 		$mtime = explode(' ', microtime() );

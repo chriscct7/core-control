@@ -57,14 +57,6 @@ class Core_Control_Updates {
 		//add_action('all', create_function('', 'var_dump(current_filter());'));
 	}
 
-	function has_page() {
-		return true;
-	}
-
-	function menu() {
-		return array('updates', 'Plugin, Theme, and Core Updates');
-	}
-
 	function handle_option_disable($val) {
 		return (object)array('last_checked' => time()+3600, 'response' => null);
 	}

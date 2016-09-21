@@ -28,14 +28,6 @@ class Core_Control_FileSystem {
 				add_filter('filesystem_method', array(&$this, 'handle_transport'), 20);
 	}
 
-
-	function has_page() {
-		return true;
-	}
-	function menu() {
-		return array('fs', 'Filesystem Access');
-	}
-	
 	function handle_posts() {
 		$option =& $this->settings;
 		

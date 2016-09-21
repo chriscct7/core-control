@@ -31,14 +31,6 @@ class Core_Control_HTTP {
 			if ( $options['enabled'] === false )
 				add_filter($options['filter'], '__return_false' );
 	}
-
-	function has_page() {
-		return true;
-	}
-
-	function menu() {
-		return array('http', 'External HTTP Access');
-	}
 	
 	function handle_posts() {
 		$option =& $this->settings;

@@ -26,16 +26,7 @@ class Core_Control_Cron {
 		add_action('admin_post_core_control-cron_run', array(&$this, 'handle_post_run'));
 
 	}
-
-	function has_page() {
-		return true;
-	}
-
-	function menu() {
-		return array('cron', 'Cron Tasks');
-	}
 	
-
 	function handle_posts() {
 		$option =& $this->settings;
 		

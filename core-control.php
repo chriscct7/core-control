@@ -194,6 +194,7 @@ final class Core_Control {
 		$modules['core_control_cron.php'] = array(
 			'id' 		  => 'cron',
 			'title' 	  => __( 'Cron Module', 'core-control' ),
+			'menu'  	  => __( 'Cron Tasks', 'core-control' ),
 			'description' => __( 'This allows you to manually run WordPress Cron Jobs and to diagnose Cron issues.' , 'core-control' ),
 		);
 
@@ -201,6 +202,7 @@ final class Core_Control {
 		$modules['core_control_filesystem.php'] = array(
 			'id' 		  => 'filesystem',
 			'title' 	  => __( 'Filesystem Module', 'core-control' ),
+			'menu'  	  => __( 'Filesystem Access', 'core-control' ),
 			'description' => __( 'This allows you to Enable/Disable the different Filesystem access methods which WordPress supports for upgrades.' , 'core-control' ),
 		);
 
@@ -208,6 +210,7 @@ final class Core_Control {
 		$modules['core_control_http.php'] = array(
 			'id' 		  => 'http',
 			'title' 	  => __( 'HTTP Module', 'core-control' ),
+			'menu'  	  => __( 'External HTTP Access', 'core-control' ),
 			'description' => __( 'This allows you to Enable/Disable the different HTTP Access methods which WordPress 3.2+ supports.' , 'core-control' ),
 		);
 
@@ -215,6 +218,7 @@ final class Core_Control {
 		$modules['core_control_http_log.php'] = array(
 			'id' 		  => 'httplog',
 			'title' 	  => __( 'HTTP Log Module', 'core-control' ),
+			'menu'  	  => __( 'External HTTP Access Logger', 'core-control' ),
 			'description' => __( 'This allows you to Log external connections which WordPress makes.' , 'core-control' ),
 		);
 
@@ -222,6 +226,7 @@ final class Core_Control {
 		$modules['core_control_updates.php'] = array(
 			'id' 		  => 'updates',
 			'title' 	  => __( 'Updates Module', 'core-control' ),
+			'menu'  	  => __( 'Plugin, Theme, and Core Updates', 'core-control' ),
 			'description' => __( 'This allows you to Disable Plugin/Theme/Core update checking, or to force a check to take place.' , 'core-control' ),
 		);
 
@@ -352,7 +357,7 @@ final class Core_Control {
 					}
 					
 					$url     = admin_url( 'tools.php?page=core-control&module=' . $module['id'] );
-					$title   = ! empty( $module['title'] ) ? esc_html( $module['title'] ) : esc_html( __('Module title unavailable', 'core-control' ) );
+					$title   = ! empty( $module['menu'] ) ? esc_html( $module['menu'] ) : esc_html( __('Module title unavailable', 'core-control' ) );
 					$sep     = $module['id'] === end( $modules )['id'] ? '' : ' | ';
 					$current = $current_module === $module['id'] ? ' class="current"' : '';
 					echo "<li><a href='$url'$current>$title</a>$sep</li>";
