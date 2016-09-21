@@ -206,6 +206,7 @@ final class Core_Control {
 			'description' => __( 'This allows you to Disable Plugin/Theme/Core update checking, or to force a check to take place.' , 'core-control' ),
 		);
 
+		$modules = apply_filters( 'core_control_get_modules', $modules );
 		return $modules;
 	}
 
@@ -351,7 +352,7 @@ final class Core_Control {
 		}
 		?>
 		<div class="error">
-			<p><?php echo sprintf( __( 'Sorry, but your version of WordPress does not meet Core Control\'s required version of 3.2 to run properly. The plugin not been activated. %1$sClick here to return to the Dashboard%2$s.', 'core-control' ), '<a href="' . $url . '">"', '</a>' ); ?></p>
+			<p><?php echo esc_html( sprintf( __( 'Sorry, but your version of WordPress does not meet Core Control\'s required version of 3.2 to run properly. The plugin not been activated. %1$sClick here to return to the Dashboard%2$s.', 'core-control' ), '<a href="' . $url . '">"', '</a>' ) ); ?></p>
 		</div>
 		<?php
 
@@ -373,7 +374,7 @@ final class Core_Control {
 		}
 		?>
 		<div class="error">
-			<p><?php echo sprintf( __( 'Sorry, but your version of PHP does not meet Core Control\'s required version of 5.2.4 to run properly. The plugin not been activated. %1$sClick here to return to the Dashboard%2$s.', 'core-control' ), '<a href="' . $url . '">"', '</a>' ); ?></p>
+			<p><?php echo esc_html( sprintf( __( 'Sorry, but your version of PHP does not meet Core Control\'s required version of 5.2.4 to run properly. The plugin not been activated. %1$sClick here to return to the Dashboard%2$s.', 'core-control' ), '<a href="' . $url . '">"', '</a>' ) ); ?></p>
 		</div>
 		<?php
 
@@ -403,12 +404,12 @@ function core_control_activation_hook( $network_wide ) {
 	
 	if ( version_compare( $wp_version, '3.2', '<' ) ) {
 		deactivate_plugins( plugin_basename( __FILE__ ) );
-		wp_die( sprintf( __( 'Sorry, but your version of WordPress does not meet Core Control\'s required version of %1$s3.2%2$s to run properly. The plugin not been activated. %3$sClick here to return to the Dashboard%4$s.', 'core-control' ), '<strong>', '</strong>', '<a href="' . $url . '">"', '</a>' ) );
+		wp_die( esc_html( sprintf( __( 'Sorry, but your version of WordPress does not meet Core Control\'s required version of %1$s3.2%2$s to run properly. The plugin not been activated. %3$sClick here to return to the Dashboard%4$s.', 'core-control' ), '<strong>', '</strong>', '<a href="' . $url . '">"', '</a>' ) ) );
 	}
 
 	if ( version_compare( PHP_VERSION, '5.2.4', '<' ) ) {
 		deactivate_plugins( plugin_basename( __FILE__ ) );
-		wp_die( sprintf( __( 'Sorry, but your version of PHP does not meet Core Control\'s required version of %1$s5.2.4%2$s to run properly. The plugin not been activated. %3$sClick here to return to the Dashboard%4$s.', 'core-control' ), '<strong>', '</strong>', '<a href="' . $url . '">"', '</a>' ) );
+		wp_die( esc_html( sprintf( __( 'Sorry, but your version of PHP does not meet Core Control\'s required version of %1$s5.2.4%2$s to run properly. The plugin not been activated. %3$sClick here to return to the Dashboard%4$s.', 'core-control' ), '<strong>', '</strong>', '<a href="' . $url . '">"', '</a>' ) ) );
 	}
 }
 register_activation_hook( __FILE__, 'core_control_activation_hook' );
