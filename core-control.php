@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class Core_Control {
+final class Core_Control {
 	var $basename = '';
 	var $folder = '';
 	var $version = '1.2.1';
