@@ -1,12 +1,13 @@
 <?php
 /*
  * Plugin Name: Core Control
- * Version: 1.2.1
+ * Version: 1.3.0
  * Plugin URI: https://dd32.id.au/wordpress-plugins/core-control/
  * Description: Core Control is a set of plugin modules which can be used to control certain aspects of the WordPress control.
  * Author: Dion Hulse
  * Author URI: https://dd32.id.au/
  */
+
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -17,7 +18,7 @@ final class Core_Control {
 	/**
 	 * Plugin version, used for cache-busting of style and script file references.
 	 *
-	 * @since 6.0.0
+	 * @since 1.3.0
 	 * @access public
 	 * @var string $version Plugin version.
 	 */
@@ -50,8 +51,14 @@ final class Core_Control {
 	 * @global $wp_version The version of WordPress installed.
 	 */
 	public function __construct() {
-
 		global $wp_version;
+
+		// Define constants
+		$this->define_globals();
+
+		// Load translations
+		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
+
 		// Detect non-supported WordPress version and return early
 		if ( version_compare( $wp_version, '3.2', '<' ) ) {
 			add_action( 'admin_notices', array( $this, 'wp_notice' ) );
@@ -105,6 +112,46 @@ final class Core_Control {
 			define( 'CORE_CONTROL_PLUGIN_URL', plugin_dir_url( $this->file )  );
 		}
 	}
+
+	/**
+	 * Loads the plugin textdomain for translation.
+	 *
+	 * @access public
+	 * @since 1.3.0
+	 *
+	 * @return void
+	 */
+	public function load_plugin_textdomain() {
+
+		// Traditional WordPress plugin locale filter.
+		$cc_locale  = apply_filters( 'plugin_locale',  get_locale(), 'core-control' );
+		$cc_mofile  = sprintf( '%1$s-%2$s.mo', 'core-control', $cc_locale ); 
+	
+		// Look for wp-content/languages/core-control/core-control-{lang}_{country}.mo
+		$cc_mofile1 = WP_LANG_DIR . '/core-control/' . $cc_mofile;
+
+		// Look in wp-content/languages/plugins/core-control/core-control-{lang}_{country}.mo
+		$cc_mofile2 = WP_LANG_DIR . '/plugins/core-control/' . $cc_mofile;
+
+		// Look in wp-content/languages/plugins/core-control-{lang}_{country}.mo
+		$cc_mofile3 = WP_LANG_DIR . '/plugins/' . $cc_mofile;
+
+		// Look in wp-content/plugins/core-control/languages/core-control-{lang}_{country}.mo
+		$cc_mofile4 = dirname( plugin_basename( CORE_CONTROL_PLUGIN_FILE ) ) . '/languages/';
+		$cc_mofile4 = apply_filters( 'core_control_languages_directory', $cc_mofile4 );
+
+		if ( file_exists( $cc_mofile1 ) ) {
+			load_textdomain( 'core-control', $cc_mofile1 );
+		} elseif ( file_exists( $cc_mofile2 ) ) {
+			load_textdomain( 'core-control', $cc_mofile2 );
+		} elseif ( file_exists( $cc_mofile3 ) ) {
+			load_textdomain( 'core-control', $cc_mofile3 );
+		} else {
+			load_plugin_textdomain( 'core-control', false, $cc_mofile4 );
+		}
+	}
+
+
 
 	function load_modules() {
 		$modules = get_option('core_control-active_modules', array());
