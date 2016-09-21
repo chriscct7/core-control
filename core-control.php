@@ -247,7 +247,7 @@ final class Core_Control {
 		$active_modules = array();
 		if ( ! empty( $saved_modules ) && is_array( $saved_modules ) ) {
 			foreach( $saved_modules as $module_filename ) {
-				if ( in_array( $module_filename, $modules ) ) {
+				if ( ! empty( $modules[ $module_filename ] ) ) {
 					$active_modules[ $module_filename ] = $modules[ $module_filename ];
 				}
 			}
@@ -268,7 +268,8 @@ final class Core_Control {
 	 */
 	public function is_module_active( $module ) {
 		if ( ! empty ( $this->get_active_modules() ) ) {
-			return in_array( $module, $this->get_active_modules() );
+			$modules = $this->get_active_modules();
+			return ! empty( $modules[ $module ] );
 		} else {
 			return false;
 		}
@@ -364,7 +365,7 @@ final class Core_Control {
 			<tbody>
 			<?php
 				foreach ( $modules as $module_file => $module ) {
-					$active = $this->is_module_active( $module );
+					$active = $this->is_module_active( $module_file );
 					$style = $active ? ' style="background-color: #e7f7d3"' : '';
 					?>
 					<tr<?php echo $style ?>>
@@ -433,7 +434,7 @@ final class Core_Control {
 			}
 		}
 
-		update_option( 'core_control-active_modules', $checked);
+		update_option( 'core_control-active_modules', $checked );
 		wp_redirect( admin_url( 'tools.php?page=core-control' ) );
 	}
 
