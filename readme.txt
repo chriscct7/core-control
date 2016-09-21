@@ -6,6 +6,7 @@ Tested Up To: 4.7
 Stable tag: 1.3.0
 
 Core Control is a set of plugin modules which can be used to control certain aspects of the WordPress Core.
+
 Currently, Core Control features modules for managing Filesystem Access, Managing plugin/theme/core updates, Managing HTTP Transports & External HTTP Request logging.
 
 == Description ==
