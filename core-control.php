@@ -47,6 +47,9 @@ final class Core_Control {
 		// Define constants
 		$this->define_globals();
 
+		// Load files
+		$this->require_files();
+
 		// Load translations
 		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 
@@ -99,6 +102,24 @@ final class Core_Control {
 
 		if ( ! defined( 'CORE_CONTROL_PLUGIN_URL' ) ) {
 			define( 'CORE_CONTROL_PLUGIN_URL', plugin_dir_url( $this->file )  );
+		}
+	}
+
+	/**
+	 * Loads all files into scope.
+	 *
+	 * @access public
+	 * @since 1.3.0
+	 *
+	 * @return 	void
+	 */
+	public function require_files() {
+		if ( is_admin() ) {
+			require CORE_CONTROL_PLUGIN_DIR . 'modules/core_control_cron.php';
+			require CORE_CONTROL_PLUGIN_DIR . 'modules/core_control_filesystem.php';
+			require CORE_CONTROL_PLUGIN_DIR . 'modules/core_control_http.php';
+			require CORE_CONTROL_PLUGIN_DIR . 'modules/core_control_http_log.php';
+			require CORE_CONTROL_PLUGIN_DIR . 'modules/core_control_updates.php';	
 		}
 	}
 
@@ -294,9 +315,10 @@ final class Core_Control {
 			
 			echo '<ul class="subsubsub">';
 				$current = $current_module === 'default' ? ' class="current"' : '';
-				echo "<li><a href='" . admin_url( 'tools.php?page=core-control' ) . "'" . $current . ">" . esc_html( __( 'Main Page', 'core-control' ) ) . "</a>|</li>";
+				$modules = $this->get_active_modules();
+				$sep     = empty( $modules ) ? '' : ' | ';
+				echo "<li><a href='" . admin_url( 'tools.php?page=core-control' ) . "'" . $current . ">" . esc_html( __( 'Main Page', 'core-control' ) ) . "</a>$sep</li>";
 
-				$modules = $this->get_modules();
 				foreach ( $modules as $module_filename => $module ) {
 					if ( empty( $module['id'] ) ) {
 						continue;
