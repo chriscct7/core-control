@@ -8,7 +8,6 @@
  * Author URI: https://dd32.id.au/
  */
 
-$GLOBALS['core-control'] = new core_control();
 class core_control {
 	var $basename = '';
 	var $folder = '';
