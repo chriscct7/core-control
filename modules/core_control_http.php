@@ -7,7 +7,12 @@ Author: Dion Hulse
 Author URI: https://dd32.id.au/
 */
 
-class core_control_http {
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class Core_Control_HTTP {
 
 	function __construct() {
 		add_action('core_control-http', array(&$this, 'the_page'));
@@ -63,7 +68,7 @@ class core_control_http {
 			  <col style="text-align:left" />
 			  <thead>
 			  <tr>
-			  	<th>Transport</th>
+				<th>Transport</th>
 				<th>Status</th>
 				<th>Actions</th>
 				<th></th>
@@ -156,7 +161,7 @@ class core_control_http {
 		';
 		echo '<thead>
 			  <tr>
-			  	<th>Constant</th>
+				<th>Constant</th>
 				<th>Value</th>
 			  </tr>
 			  </thead>
@@ -200,7 +205,7 @@ class core_control_http {
 		';
 		echo '<thead>
 			  <tr>
-			  	<th>Filter</th>
+				<th>Filter</th>
 				<th>Default Value</th>
 				<th>Current Value</th>
 			  </tr>
@@ -225,4 +230,4 @@ class core_control_http {
 		echo '</div>';
 	}
 }
-?>
+new Core_Control_HTTP();

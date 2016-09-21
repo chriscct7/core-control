@@ -6,7 +6,13 @@ Description: Core Control Updates module, This allows you to Disable Plugin/Them
 Author: Dion Hulse
 Author URI: https://dd32.id.au/
 */
-class core_control_updates {
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class Core_Control_Updates {
 
 	function __construct() {
 		add_action('core_control-updates', array(&$this, 'the_page'));
@@ -253,3 +259,4 @@ class core_control_updates {
 	}
 
 }
+new Core_Control_Updates();

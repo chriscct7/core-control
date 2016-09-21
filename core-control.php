@@ -47,9 +47,6 @@ final class Core_Control {
 		// Define constants
 		$this->define_globals();
 
-		// Load files
-		$this->require_files();
-
 		// Load translations
 		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 
@@ -64,6 +61,9 @@ final class Core_Control {
 			add_action( 'admin_notices', array( $this, 'php_notice' ) );
 			return;
 		}
+
+		// Load files
+		$this->require_files();
 
 		// Add Core Control menu item
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );

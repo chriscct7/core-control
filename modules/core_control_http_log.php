@@ -6,7 +6,7 @@ Description: Core Control HTTP Logger module, This allows you to Log external co
 Author: Dion Hulse
 Author URI: https://dd32.id.au/
 */
-class core_control_http_log {
+class Core_Control_HTTP_Log {
 
 	var $request = null;
 
@@ -422,3 +422,4 @@ class core_control_http_log {
 }
 
 class core_control_http_log_item {}
+new Core_Control_HTTP_Log();

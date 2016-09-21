@@ -6,7 +6,13 @@ Description: Core Control Filesystem module, This allows you to Enable/Disable t
 Author: Dion Hulse
 Author URI: https://dd32.id.au/
 */
-class core_control_filesystem {
+
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class Core_Control_FileSystem {
 
 	function __construct() {
 		add_action('core_control-fs', array(&$this, 'the_page'));
@@ -72,7 +78,7 @@ class core_control_filesystem {
 			  <col />
 			  <thead>
 			  <tr>
-			  	<th>Transport</th>
+				<th>Transport</th>
 				<th>Status</th>
 				<th>Actions</th>
 				<th></th>
@@ -131,7 +137,7 @@ class core_control_filesystem {
 			  <col />
 			  <thead>
 			  <tr>
-			  	<th>Constant</th>
+				<th>Constant</th>
 				<th>Path</th>
 				<th>Description</th>
 				<th></th>
@@ -178,4 +184,4 @@ class core_control_filesystem {
 		return $available;
 	}
 }
-?>
+new Core_Control_FileSystem();

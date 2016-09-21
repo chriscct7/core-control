@@ -7,7 +7,12 @@ Author: Dion Hulse
 Author URI: https://dd32.id.au/
 */
 
-class core_control_cron {
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class Core_Control_Cron {
 
 	function __construct() {
 		add_action('core_control-cron', array(&$this, 'the_page'));
@@ -106,8 +111,8 @@ class core_control_cron {
 			  <col />
 			  <thead>
 			  <tr>
-			  	<th>Task Type</th>
-			  	<th>Due Time</th>
+				<th>Task Type</th>
+				<th>Due Time</th>
 				<th>Hook to run</th>
 				<th>Arguements</th>
 				<th>Actions</th>
@@ -175,4 +180,4 @@ class core_control_cron {
 		echo '</div>';
 	}
 }
-
+new Core_Control_Cron();
