@@ -50,9 +50,15 @@ final class Core_Control {
 		// Load translations
 		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 
-		// Detect non-supported WordPress version and return early
+		// Detect non-supported WordPress versions and return early
 		if ( version_compare( $wp_version, '3.2', '<' ) ) {
 			add_action( 'admin_notices', array( $this, 'wp_notice' ) );
+			return;
+		}
+
+		// Detect non-supported PHP versions and return early
+		if ( version_compare( PHP_VERSION, '5.2.4', '<' ) ) {
+			add_action( 'admin_notices', array( $this, 'php_notice' ) );
 			return;
 		}
 
@@ -136,32 +142,116 @@ final class Core_Control {
 		}
 	}
 
-	
+	/**
+	 * Add settings page to admin menu.
+	 *
+	 * Adds the main page for Core Control to the menu as a submenu of Tools.php.
+	 * This page contains settings to turn on each available module.
+	 *
+	 * @since 1.3.0
+	 * @access public
+	 *
+	 * @return void
+	 */
+	public function admin_menu() {
+		add_submenu_page( 'tools.php', __( 'Core Control', 'core-control' ), __( 'Core Control', 'core-control' ), 'manage_options', 'core-control', array( $this, 'settings_page' ) );
+	}
+
+	/**
+	 * Array of installed modules.
+	 *
+	 * Returns an array keyed by the module filename (for backwards compat reasons) of all installed modules.
+	 * The array contains the id, title (translated) and description (translated) of the module.
+	 *
+	 * @access public
+	 * @since 1.3.0
+	 *
+	 * @return array Array of installed modules.
+	 */
 	public function get_modules() {
-		$modules = get_option('core_control-active_modules', array());
-		foreach ( (array) $modules as $module ) {
-			if ( 0 !== validate_file($module) )
-				continue;
-			if ( ! file_exists(WP_PLUGIN_DIR . '/' . $this->folder . '/modules/' . $module) )
-				continue;
-			include_once WP_PLUGIN_DIR . '/' . $this->folder . '/modules/' . $module;
-			$class = basename($module, '.php');
-			$this->modules[ $class ] = new $class;
-		}
+		$modules = array();
+
+		// Cron Module
+		$modules['core_control_cron.php'] = array(
+			'id' 		  => 'cron',
+			'title' 	  => __( 'Cron Module', 'core-control' ),
+			'description' => __( 'This allows you to manually run WordPress Cron Jobs and to diagnose Cron issues.' , 'core-control' ),
+		);
+
+		// Filesystem Module
+		$modules['core_control_filesystem.php'] = array(
+			'id' 		  => 'filesystem',
+			'title' 	  => __( 'Filesystem Module', 'core-control' ),
+			'description' => __( 'This allows you to Enable/Disable the different Filesystem access methods which WordPress supports for upgrades.' , 'core-control' ),
+		);
+
+		// HTTP Module
+		$modules['core_control_http.php'] = array(
+			'id' 		  => 'http',
+			'title' 	  => __( 'HTTP Module', 'core-control' ),
+			'description' => __( 'This allows you to Enable/Disable the different HTTP Access methods which WordPress 3.2+ supports.' , 'core-control' ),
+		);
+
+		// HTTP Log Module
+		$modules['core_control_http_log.php'] = array(
+			'id' 		  => 'httplog',
+			'title' 	  => __( 'HTTP Log Module', 'core-control' ),
+			'description' => __( 'This allows you to Log external connections which WordPress makes.' , 'core-control' ),
+		);
+
+		// Updates Module
+		$modules['core_control_updates.php'] = array(
+			'id' 		  => 'updates',
+			'title' 	  => __( 'Updates Module', 'core-control' ),
+			'description' => __( 'This allows you to Disable Plugin/Theme/Core update checking, or to force a check to take place.' , 'core-control' ),
+		);
+
+		return $modules;
 	}
 
+	/**
+	 * Array of active modules.
+	 *
+	 * Returns an array keyed by the module filename (for backwards compat reasons) of all active modules.
+	 * The array contains the id, title (translated) and description (translated) of the module.
+	 *
+	 * @access public
+	 * @since 1.3.0
+	 *
+	 * @return array Array of active modules.
+	 */
 	public function get_active_modules() {
+		$saved_modules = get_option( 'core_control-active_modules', array() );
+		$modules = $this->get_modules();
 
+		$active_modules = array();
+		if ( ! empty( $saved_modules ) && is_array( $saved_modules ) && in_array( ) ) {
+			foreach( $saved_modules as $module_filename ) {
+				if ( in_array( $module_filename, $modules ) ) {
+					$active_modules[ $module_filename ] = $modules[ $module_filename ];
+				}
+			}
+		}
+		return $active_modules;
 	}
 
-
-
-	function admin_menu() {
-		add_submenu_page('tools.php', __('Core Control', 'core-control'), __('Core Control', 'core-control'), 'manage_options', 'core-control', array(&$this, 'main_page'));
-	}
-
-	function is_module_active($module) {
-		return in_array( $module, get_option('core_control-active_modules', array()) );
+	/**
+	 * Is module active.
+	 *
+	 * Takes in the filename of a module and returns a boolean of if it's active.
+	 *
+	 * @access public
+	 * @since 1.3.0
+	 *
+	 * @param  string Filename of module.
+	 * @return bool   Is module active.
+	 */
+	public function is_module_active( $module ) {
+		if ( ! empty ( $this->get_active_modules() ) ) {
+			return in_array( $module, $this->get_active_modules() );
+		} else {
+			return false;
+		}
 	}
 	
 	function handle_posts() {
@@ -181,9 +271,6 @@ final class Core_Control {
 		echo '<div class="wrap">';
 		screen_icon('tools');
 		echo '<h2>Core Control</h2>';
-	
-		if ( version_compare(PHP_VERSION, '5.2.0', '<') )
-			printf(__('<p><strong>Core Control:</strong> WARNING!! Your server is currently running PHP %s, Please bug your host to upgrade to a recent version of PHP which is less bug-prone. At last count, <strong>over 80%% of WordPress installs are using PHP 5.2+</strong>, WordPress will require PHP 5.2+ some day soon, Prepare while your have time time.</p>', 'core-control'), PHP_VERSION);
 		
 		$module = !empty($_GET['module']) ? $_GET['module'] : 'default';
 		
@@ -248,57 +335,49 @@ final class Core_Control {
 <?php
 	}
 
-	//HELPERS
-	function find_files( $folder, $args = array() ) {
-	
-		$folder = untrailingslashit($folder);
-	
-		$defaults = array( 'pattern' => '', 'levels' => 100, 'relative' => false );
-		$r = wp_parse_args($args, $defaults);
-
-		extract($r, EXTR_SKIP);
-		
-		//Now for recursive calls, clear relative, we'll handle it, and decrease the levels.
-		unset($r['relative']);
-		--$r['levels'];
-	
-		if ( ! $levels )
-			return array();
-		
-		if ( ! is_readable($folder) )
-			return false;
-
-		if ( true === $relative )
-			$relative = $folder;
-	
-		$files = array();
-		if ( $dir = @opendir( $folder ) ) {
-			while ( ( $file = readdir($dir) ) !== false ) {
-				if ( in_array($file, array('.', '..') ) )
-					continue;
-				if ( is_dir( $folder . '/' . $file ) ) {
-					$files2 = $this->find_files( $folder . '/' . $file, $r );
-					if( $files2 )
-						$files = array_merge($files, $files2 );
-					else if ( empty($pattern) || preg_match('|^' . str_replace('\*', '\w+', preg_quote($pattern)) . '$|i', $file) )
-						$files[] = $folder . '/' . $file . '/';
-				} else {
-					if ( empty($pattern) || preg_match('|^' . str_replace('\*', '\w+', preg_quote($pattern)) . '$|i', $file) )
-						$files[] = $folder . '/' . $file;
-				}
-			}
+	/**
+	 * Output a nag notice if the user has an out of date WordPress version.
+	 *
+	 * @access public
+	 * @since 1.3.0
+	 *
+	 * @return 	void
+	 */
+	public function wp_notice() {
+		$url = admin_url( 'plugins.php' );
+		// Check for MS dashboard
+		if( is_network_admin() ) {
+			$url = network_admin_url( 'plugins.php' );
 		}
-		@closedir( $dir );
-	
-		if ( ! empty($relative) ) {
-			$relative = trailingslashit($relative);
-			foreach ( $files as $key => $file )
-				$files[$key] = preg_replace('!^' . preg_quote($relative) . '!', '', $file);
-		}
-	
-		return $files;
+		?>
+		<div class="error">
+			<p><?php echo sprintf( __( 'Sorry, but your version of WordPress does not meet Core Control\'s required version of 3.2 to run properly. The plugin not been activated. %1$sClick here to return to the Dashboard%2$s.', 'core-control' ), '<a href="' . $url . '">"', '</a>' ); ?></p>
+		</div>
+		<?php
+
 	}
 
+	/**
+	 * Output a nag notice if the user has an out of date PHP version.
+	 *
+	 * @access public
+	 * @since 1.3.0
+	 *
+	 * @return 	void
+	 */
+	public function php_notice() {
+		$url = admin_url( 'plugins.php' );
+		// Check for MS dashboard
+		if ( is_network_admin() ) {
+			$url = network_admin_url( 'plugins.php' );
+		}
+		?>
+		<div class="error">
+			<p><?php echo sprintf( __( 'Sorry, but your version of PHP does not meet Core Control\'s required version of 5.2.4 to run properly. The plugin not been activated. %1$sClick here to return to the Dashboard%2$s.', 'core-control' ), '<a href="' . $url . '">"', '</a>' ); ?></p>
+		</div>
+		<?php
+
+	}
 }
 
 /**
@@ -325,6 +404,11 @@ function core_control_activation_hook( $network_wide ) {
 	if ( version_compare( $wp_version, '3.2', '<' ) ) {
 		deactivate_plugins( plugin_basename( __FILE__ ) );
 		wp_die( sprintf( __( 'Sorry, but your version of WordPress does not meet Core Control\'s required version of %1$s3.2%2$s to run properly. The plugin not been activated. %3$sClick here to return to the Dashboard%4$s.', 'core-control' ), '<strong>', '</strong>', '<a href="' . $url . '">"', '</a>' ) );
+	}
+
+	if ( version_compare( PHP_VERSION, '5.2.4', '<' ) ) {
+		deactivate_plugins( plugin_basename( __FILE__ ) );
+		wp_die( sprintf( __( 'Sorry, but your version of PHP does not meet Core Control\'s required version of %1$s5.2.4%2$s to run properly. The plugin not been activated. %3$sClick here to return to the Dashboard%4$s.', 'core-control' ), '<strong>', '</strong>', '<a href="' . $url . '">"', '</a>' ) );
 	}
 }
 register_activation_hook( __FILE__, 'core_control_activation_hook' );
