@@ -25,17 +25,17 @@ class Core_Control {
 		$this->folder = dirname($this->basename);
 
 		// Load modules ASAP
-		add_action('plugins_loaded', array(&$this, 'load_modules'), 1);
+		add_action('plugins_loaded', array( $this, 'load_modules'), 1);
 
 		//Register general hooks.
-		add_action('admin_menu', array(&$this, 'admin_menu'));
-		register_activation_hook(__FILE__, array(&$this, 'activate'));
+		add_action('admin_menu', array( $this, 'admin_menu'));
+		register_activation_hook(__FILE__, array( $this, 'activate'));
 
 		//Add actions/filters
-		add_action('admin_post_core_control-modules', array(&$this, 'handle_posts'));
+		add_action('admin_post_core_control-modules', array( $this, 'handle_posts'));
 
 		//Add page
-		add_action('core_control-default', array(&$this, 'default_page'));
+		add_action('core_control-default', array( $this, 'default_page'));
 
 	}
 	
