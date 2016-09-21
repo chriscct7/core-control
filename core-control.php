@@ -152,7 +152,7 @@ final class Core_Control {
 	 * @return void
 	 */
 	public function admin_menu() {
-		add_submenu_page( 'tools.php', __( 'Core Control', 'core-control' ), __( 'Core Control', 'core-control' ), 'manage_options', 'core-control', array( $this, 'main_page' ) );
+		add_submenu_page( 'tools.php', esc_html( __( 'Core Control', 'core-control' ) ), esc_html( __( 'Core Control', 'core-control' ) ), 'manage_options', 'core-control', array( $this, 'main_page' ) );
 	}
 
 	/**
@@ -285,7 +285,7 @@ final class Core_Control {
 	public function main_page() {
 		echo '<div class="wrap">';
 			screen_icon( 'tools' );
-			echo '<h2>' . __( 'Core Control', 'core-control' ) . '</h2>';
+			echo '<h2>' . esc_html( __( 'Core Control', 'core-control' ) ) . '</h2>';
 		
 			$module = ! empty( $_GET['module'] ) ? $_GET['module'] : '';
 			if ( ! $module || ! $this->is_module_active( $module ) ) {
@@ -350,7 +350,7 @@ final class Core_Control {
 					if ( ! empty( $module['title'] ) ) {
 						echo esc_html( $module['title'] );
 					} else {
-						echo __( 'Module title not available', 'core-control' );
+						echo esc_html( __( 'Module title not available', 'core-control' ) );
 					}
 					?>
 				</td>
@@ -359,7 +359,7 @@ final class Core_Control {
 					if ( ! empty( $module['description'] ) ) {
 						echo esc_html( $module['description'] );
 					} else {
-						echo __( 'Module description not available', 'core-control' );
+						echo esc_html( __( 'Module description not available', 'core-control' ) );
 					}
 					?>
 				</td>
@@ -370,7 +370,7 @@ final class Core_Control {
 			</tbody>
 			</table>
 			<?php wp_nonce_field( 'core-control-settings-nonce', 'core-control-settings-nonce' ); ?>
-			<?php submit_button( __( 'Save Module Choices', 'core-control' ), 'primary', 'core-control-module-settings-submit', false ); ?>
+			<?php submit_button( esc_html( __( 'Save Module Choices', 'core-control' ) ), 'primary', 'core-control-module-settings-submit', false ); ?>
 			</p>
 			</form>
 		<?php
