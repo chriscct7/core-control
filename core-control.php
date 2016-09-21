@@ -224,7 +224,7 @@ final class Core_Control {
 		$modules = $this->get_modules();
 
 		$active_modules = array();
-		if ( ! empty( $saved_modules ) && is_array( $saved_modules ) && in_array( ) ) {
+		if ( ! empty( $saved_modules ) && is_array( $saved_modules ) ) {
 			foreach( $saved_modules as $module_filename ) {
 				if ( in_array( $module_filename, $modules ) ) {
 					$active_modules[ $module_filename ] = $modules[ $module_filename ];
@@ -288,7 +288,7 @@ final class Core_Control {
 			echo '<h2>' . esc_html( __( 'Core Control', 'core-control' ) ) . '</h2>';
 		
 			$current_module = ! empty( $_GET['module'] ) ? $_GET['module'] : '';
-			if ( ! $module || ! $this->is_module_active( $module ) ) {
+			if ( ! $current_module || ! $this->is_module_active( $current_module ) ) {
 				$current_module = 'default';
 			}
 			
