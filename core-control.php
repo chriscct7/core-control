@@ -62,16 +62,14 @@ final class Core_Control {
 			return;
 		}
 
-		// Add menu item
+		// Add Core Control menu item
 		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 
-		register_activation_hook(__FILE__, array( $this, 'activate'));
+		// Save enabled modules
+		add_action( 'admin_init', array( $this, 'save_module_selections' ) );
 
-		//Add actions/filters
-		add_action('admin_post_core_control-modules', array( $this, 'handle_posts'));
-
-		//Add page
-		add_action('core_control-default', array( $this, 'default_page'));
+		// Add Module Activation Settings Page
+		add_action( 'core_control-default', array( $this, 'module_selection_page' ) );
 
 	}
 
@@ -146,7 +144,7 @@ final class Core_Control {
 	 * Add settings page to admin menu.
 	 *
 	 * Adds the main page for Core Control to the menu as a submenu of Tools.php.
-	 * This page contains settings to turn on each available module.
+	 * This page contains settings to turn on each available module as well those modules's settings.
 	 *
 	 * @since 1.3.0
 	 * @access public
@@ -154,7 +152,7 @@ final class Core_Control {
 	 * @return void
 	 */
 	public function admin_menu() {
-		add_submenu_page( 'tools.php', __( 'Core Control', 'core-control' ), __( 'Core Control', 'core-control' ), 'manage_options', 'core-control', array( $this, 'settings_page' ) );
+		add_submenu_page( 'tools.php', __( 'Core Control', 'core-control' ), __( 'Core Control', 'core-control' ), 'manage_options', 'core-control', array( $this, 'main_page' ) );
 	}
 
 	/**
@@ -255,51 +253,59 @@ final class Core_Control {
 		}
 	}
 	
-	function handle_posts() {
-		$checked = isset($_POST['checked']) ? stripslashes_deep( (array)$_POST['checked'] ) : array();
-
-		foreach ( $checked as $index => $module ) {
-			if ( 0 !== validate_file($module) ||
-				! file_exists(WP_PLUGIN_DIR . '/' . $this->folder . '/modules/' . $module) )
-					unset($checked[$index]);
-		}
-
-		update_option('core_control-active_modules', $checked);
-		wp_redirect( admin_url('tools.php?page=core-control') );
-	}
-	
-	function main_page() {
+	/**
+	 * Outputs Core Control settings pages.
+	 *
+	 * Outputs the settings page for the selected module.
+	 *
+	 * @access public
+	 * @since 1.3.0
+	 *
+	 * @return void
+	 */
+	public function main_page() {
 		echo '<div class="wrap">';
-		screen_icon('tools');
-		echo '<h2>Core Control</h2>';
+			screen_icon( 'tools' );
+			echo '<h2>' . __( 'Core Control', 'core-control') . '</h2>';
 		
-		$module = !empty($_GET['module']) ? $_GET['module'] : 'default';
-		
-		$menus = array( array('default', 'Main Page') );
-		foreach ( $this->modules as $a_module ) {
-			if ( ! $a_module->has_page() )
-				continue;
-			$menus[] = $a_module->menu();
-		}
-		echo '<ul class="subsubsub">';
-		foreach ( $menus as $menu ) {
-			$url = 'tools.php?page=core-control';
-			if ( 'default' != $menu[0] )
-				$url .= '&module=' . $menu[0];
-			$title = $menu[1];
-			$sep = $menu == end($menus) ? '' : ' | ';
-			$current = $module == $menu[0] ? ' class="current"' : '';
-			echo "<li><a href='$url'$current>$title</a>$sep</li>";
-		}
-		echo '</ul>';
-		echo '<br class="clear" />';
-
-		do_action('core_control-' . $module);
-
+			$module = ! empty( $_GET['module'] ) ? $_GET['module'] : '';
+			if ( ! $module || ! $this->is_module_active( $module ) ) {
+				$module = 'default';
+			}
+			
+			$menus = array( array('default', 'Main Page') );
+			foreach ( $this->modules as $a_module ) {
+				if ( ! $a_module->has_page() )
+					continue;
+				$menus[] = $a_module->menu();
+			}
+			echo '<ul class="subsubsub">';
+			foreach ( $menus as $menu ) {
+				$url = 'tools.php?page=core-control';
+				if ( 'default' != $menu[0] )
+					$url .= '&module=' . $menu[0];
+				$title = $menu[1];
+				$sep = $menu == end($menus) ? '' : ' | ';
+				$current = $module == $menu[0] ? ' class="current"' : '';
+				echo "<li><a href='$url'$current>$title</a>$sep</li>";
+			}
+			echo '</ul>';
+			echo '<br class="clear" />';
+			do_action('core_control-' . $module);
 		echo '</div>';
 	}
 
-	function default_page() {
+	/**
+	 * Outputs module selection page.
+	 *
+	 * Outputs the settings page for picking modules to use.
+	 *
+	 * @access public
+	 * @since 1.3.0
+	 *
+	 * @return void
+	 */
+	public function module_selection_page() {
 		$files = $this->find_files( WP_PLUGIN_DIR . '/' . $this->folder . '/modules/', array('pattern' => '*.php', 'levels' => 1, 'relative' => true) );
 ?>
 <p>Welcome to Core Control, Please select the subsection from the above menu which you would like to modify</p>
@@ -334,6 +340,29 @@ final class Core_Control {
 </p>
 </form>
 <?php
+	}
+
+	/**
+	 * Save module selections.
+	 *
+	 * Saves active module selections.
+	 *
+	 * @access public
+	 * @since 1.3.0
+	 *
+	 * @return void
+	 */
+	public function save_module_selections() {
+		$checked = isset( $_POST['checked'] ) ? stripslashes_deep( (array)$_POST['checked'] ) : array();
+
+		foreach ( $checked as $index => $module ) {
+			if ( 0 !== validate_file($module) ||
+				! file_exists(WP_PLUGIN_DIR . '/' . $this->folder . '/modules/' . $module) )
+					unset($checked[$index]);
+		}
+
+		update_option('core_control-active_modules', $checked);
+		wp_redirect( admin_url('tools.php?page=core-control') );
 	}
 
 	/**
