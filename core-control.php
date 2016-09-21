@@ -6,6 +6,8 @@
  * Description: Core Control is a set of plugin modules which can be used to control certain aspects of the WordPress control.
  * Author: Dion Hulse
  * Author URI: https://dd32.id.au/
+ * Text Domain: core-control
+ * Domain Path: /languages
  */
 
 // Exit if accessed directly.
