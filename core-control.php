@@ -370,6 +370,7 @@ final class Core_Control {
 			?>
 			</tbody>
 			</table>
+			<p>
 			<?php wp_nonce_field( 'core-control-settings-nonce', 'core-control-settings-nonce' ); ?>
 			<?php submit_button( esc_html( __( 'Save Module Choices', 'core-control' ) ), 'primary', 'core-control-module-settings-submit', false ); ?>
 			</p>
