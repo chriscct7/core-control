@@ -458,6 +458,7 @@ final class Core_Control {
 
 	}
 }
+$GLOBALS['core-control'] = new Core_Control();
 
 /**
  * Fired when the plugin is activated.
