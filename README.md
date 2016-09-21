@@ -2,7 +2,7 @@
 
 This is a work in progress update of [dd32's](https://profiles.wordpress.org/dd32/) [Core Control](https://wordpress.org/plugins/core-control/) plugin for WordPress.
 
-Core Control is a set of plugin modules which can be used to control certain aspects of the WordPress Core.Currently, Core Control features modules for managing Filesystem Access, Managing plugin/theme/core updates, Managing HTTP Transports & External HTTP Request logging. More information can be found on the [plugin homepage](https://wordpress.org/plugins/core-control/).
+Core Control is a set of plugin modules which can be used to control certain aspects of the WordPress Core. Currently, Core Control features modules for managing Filesystem Access, Managing plugin/theme/core updates, Managing HTTP Transports & External HTTP Request logging. More information can be found on the [plugin homepage](https://wordpress.org/plugins/core-control/).
 
 We use this plugin everyday to support our [Google Analytics by MonsterInsights](https://wordpress.org/plugins/google-analytics-for-wordpress/) plugin. I'm hoping to develop a new version of the plugin that fixes most of the bugs we see while using the plugin each day.
 
