@@ -342,30 +342,30 @@ final class Core_Control {
 				foreach ( $modules as $module_file => $module ) {
 					$active = $this->is_module_active( $module );
 					$style = $active ? ' style="background-color: #e7f7d3"' : '';
-			?>
-			<tr<?php echo $style ?>>
-				<th scope="row" class="check-column"><input type="checkbox" name="checked[]" value="<?php echo esc_attr( $module_file ) ?>" <?php checked( $active ); ?> /></th>
-				<td>
-					<?php
-					if ( ! empty( $module['title'] ) ) {
-						echo esc_html( $module['title'] );
-					} else {
-						echo esc_html( __( 'Module title not available', 'core-control' ) );
-					}
 					?>
-				</td>
-				<td>
+					<tr<?php echo $style ?>>
+						<th scope="row" class="check-column"><input type="checkbox" name="checked[]" value="<?php echo esc_attr( $module_file ) ?>" <?php checked( $active ); ?> /></th>
+						<td>
+							<?php
+							if ( ! empty( $module['title'] ) ) {
+								echo esc_html( $module['title'] );
+							} else {
+								echo esc_html( __( 'Module title not available', 'core-control' ) );
+							}
+							?>
+						</td>
+						<td>
+							<?php
+							if ( ! empty( $module['description'] ) ) {
+								echo esc_html( $module['description'] );
+							} else {
+								echo esc_html( __( 'Module description not available', 'core-control' ) );
+							}
+							?>
+						</td>
+					</tr>
 					<?php
-					if ( ! empty( $module['description'] ) ) {
-						echo esc_html( $module['description'] );
-					} else {
-						echo esc_html( __( 'Module description not available', 'core-control' ) );
-					}
-					?>
-				</td>
-			</tr>
-			<?php
-				} //end foreach;
+				}
 			?>
 			</tbody>
 			</table>
