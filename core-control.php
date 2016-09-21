@@ -7,6 +7,10 @@
  * Author: Dion Hulse
  * Author URI: https://dd32.id.au/
  */
+// Exit if accessed directly.
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class core_control {
 	var $basename = '';
