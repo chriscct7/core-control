@@ -287,7 +287,8 @@ final class Core_Control {
 	 */
 	public function is_valid_module( $module ) {
 		if ( ! empty ( $this->get_modules() ) ) {
-			return in_array( $module, $this->get_modules() );
+			$modules = $this->get_modules();
+			return ! empty( $modules[ $module ] );
 		} else {
 			return false;
 		}
@@ -426,7 +427,6 @@ final class Core_Control {
 		}
 
 		$checked = isset( $_POST['checked'] ) ? stripslashes_deep( (array) $_POST['checked'] ) : array();
-
 		foreach ( $checked as $index => $module ) {
 			if ( ! $this->is_valid_module( $module ) ) {
 				unset( $checked[ $index ] );
