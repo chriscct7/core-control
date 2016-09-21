@@ -13,16 +13,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class Core_Control {
-	var $basename = '';
-	var $folder = '';
-	var $version = '1.2.1';
 
-	var $modules = array();
+	/**
+	 * Plugin version, used for cache-busting of style and script file references.
+	 *
+	 * @since 6.0.0
+	 * @access public
+	 * @var string $version Plugin version.
+	 */
+	public $version = '1.3.0';
+
+	/**
+	 * Plugin file.
+	 *
+	 * @since 1.3.0
+	 * @access public
+	 * @var string $file PHP File constant for main file.
+	 */
+	public $file = __FILE__;
+
+	/**
+	 * Plugin modiles.
+	 *
+	 * @since 1.3.0
+	 * @access public
+	 * @var array $modules Array of available modules.
+	 */
+	public $modules = array();
 	
-	function __construct() {
-		//Set the directory of the plugin:
-		$this->basename = plugin_basename(__FILE__);
-		$this->folder = dirname($this->basename);
+	/**
+	 * Primary class constructor.
+	 *
+	 * @since 1.3.0
+	 * @access public
+	 *
+	 * @global $wp_version The version of WordPress installed.
+	 */
+	public function __construct() {
+
+		global $wp_version;
+		// Detect non-supported WordPress version and return early
+		if ( version_compare( $wp_version, '3.2', '<' ) ) {
+			add_action( 'admin_notices', array( $this, 'wp_notice' ) );
+			return;
+		}
 
 		// Load modules ASAP
 		add_action('plugins_loaded', array( $this, 'load_modules'), 1);
@@ -43,12 +77,32 @@ final class Core_Control {
 		add_submenu_page('tools.php', __('Core Control', 'core-control'), __('Core Control', 'core-control'), 'manage_options', 'core-control', array(&$this, 'main_page'));
 	}
 
-	function activate() {
-		global $wp_version;
-		if ( ! version_compare( $wp_version, '3.2', '>=') ) {
-			if ( function_exists('deactivate_plugins') )
-				deactivate_plugins(__FILE__);
-			die(__('<strong>Core Control:</strong> Sorry, This plugin requires WordPress 3.2+', 'core-control'));
+	/**
+	 * Define Core Control constants.
+	 *
+	 * This function defines all of the Core Control PHP constants.
+	 *
+	 * @since 1.3.0
+	 * @access private
+	 *
+	 * @return void
+	 */
+	private function define_globals() {
+
+		if ( ! defined( 'CORE_CONTROL_VERSION' ) ) {
+			define( 'CORE_CONTROL_VERSION', $this->version );
+		}
+
+		if ( ! defined( 'CORE_CONTROL_PLUGIN_FILE' ) ) {
+			define( 'CORE_CONTROL_PLUGIN_FILE', $this->file );
+		}
+
+		if ( ! defined( 'CORE_CONTROL_PLUGIN_DIR' ) ) {
+			define( 'CORE_CONTROL_PLUGIN_DIR', plugin_dir_path( $this->file )  );
+		}
+
+		if ( ! defined( 'CORE_CONTROL_PLUGIN_URL' ) ) {
+			define( 'CORE_CONTROL_PLUGIN_URL', plugin_dir_url( $this->file )  );
 		}
 	}
 
