@@ -51,7 +51,7 @@ final class Core_Control {
 		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 
 		// Detect non-supported WordPress versions and return early
-		if ( version_compare( $wp_version, '3.2', '<' ) ) {
+		if ( version_compare( $wp_version, '4.0', '<' ) ) {
 			add_action( 'admin_notices', array( $this, 'wp_notice' ) );
 			return;
 		}
@@ -211,7 +211,7 @@ final class Core_Control {
 			'id' 		  => 'http',
 			'title' 	  => __( 'HTTP Module', 'core-control' ),
 			'menu'  	  => __( 'External HTTP Access', 'core-control' ),
-			'description' => __( 'This allows you to Enable/Disable the different HTTP Access methods which WordPress 3.2+ supports.' , 'core-control' ),
+			'description' => __( 'This allows you to Enable/Disable the different HTTP Access methods which WordPress 4.0+ supports.' , 'core-control' ),
 		);
 
 		// HTTP Log Module
@@ -484,7 +484,7 @@ final class Core_Control {
 		}
 		?>
 		<div class="error">
-			<p><?php echo esc_html( sprintf( __( 'Sorry, but your version of WordPress does not meet Core Control\'s required version of 3.2 to run properly. The plugin not been activated. %1$sClick here to return to the Dashboard%2$s.', 'core-control' ), '<a href="' . $url . '">"', '</a>' ) ); ?></p>
+			<p><?php echo esc_html( sprintf( __( 'Sorry, but your version of WordPress does not meet Core Control\'s required version of 4.0 to run properly. The plugin not been activated. %1$sClick here to return to the Dashboard%2$s.', 'core-control' ), '<a href="' . $url . '">"', '</a>' ) ); ?></p>
 		</div>
 		<?php
 
@@ -535,9 +535,9 @@ function core_control_activation_hook( $network_wide ) {
 		$url = network_admin_url( 'plugins.php' );
 	}
 	
-	if ( version_compare( $wp_version, '3.2', '<' ) ) {
+	if ( version_compare( $wp_version, '4.0', '<' ) ) {
 		deactivate_plugins( plugin_basename( __FILE__ ) );
-		wp_die( esc_html( sprintf( __( 'Sorry, but your version of WordPress does not meet Core Control\'s required version of %1$s3.2%2$s to run properly. The plugin not been activated. %3$sClick here to return to the Dashboard%4$s.', 'core-control' ), '<strong>', '</strong>', '<a href="' . $url . '">"', '</a>' ) ) );
+		wp_die( esc_html( sprintf( __( 'Sorry, but your version of WordPress does not meet Core Control\'s required version of %1$s4.0%2$s to run properly. The plugin not been activated. %3$sClick here to return to the Dashboard%4$s.', 'core-control' ), '<strong>', '</strong>', '<a href="' . $url . '">"', '</a>' ) ) );
 	}
 
 	if ( version_compare( PHP_VERSION, '5.2.4', '<' ) ) {

@@ -2,7 +2,7 @@
 Contributors: dd32
 Tags: debug, filesystem, manager
 Requires at least: 4.0
-Tested Up To: 4.5
+Tested Up To: 4.7
 Stable tag: 1.3.0
 
 Core Control is a set of plugin modules which can be used to control certain aspects of the WordPress Core.
@@ -52,7 +52,7 @@ Because no-one has asked me.. Ask me some questions! wordpress@dd32.id.au
  * Refactored module system to load modules and module info from an array (filterable) instead of using filesystem searching
  * Refactored all strings to escape them and make them translatable
  * Refactored admin page to harden security and reduce bugs from non-existant array keys
- * 
+ * Now enforces minimum PHP version (5.2.4) and WP version (4.0) requirements.
 
 = 1.2.1 =
  * HTTP Logger: Support headers returned as an array value.
