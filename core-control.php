@@ -32,15 +32,6 @@ final class Core_Control {
 	 * @var string $file PHP File constant for main file.
 	 */
 	public $file = __FILE__;
-
-	/**
-	 * Plugin modiles.
-	 *
-	 * @since 1.3.0
-	 * @access public
-	 * @var array $modules Array of available modules.
-	 */
-	public $modules = array();
 	
 	/**
 	 * Primary class constructor.
@@ -65,11 +56,9 @@ final class Core_Control {
 			return;
 		}
 
-		// Load modules ASAP
-		add_action('plugins_loaded', array( $this, 'load_modules'), 1);
+		// Add menu item
+		add_action( 'admin_menu', array( $this, 'admin_menu' ) );
 
-		//Register general hooks.
-		add_action('admin_menu', array( $this, 'admin_menu'));
 		register_activation_hook(__FILE__, array( $this, 'activate'));
 
 		//Add actions/filters
@@ -78,10 +67,6 @@ final class Core_Control {
 		//Add page
 		add_action('core_control-default', array( $this, 'default_page'));
 
-	}
-	
-	function admin_menu() {
-		add_submenu_page('tools.php', __('Core Control', 'core-control'), __('Core Control', 'core-control'), 'manage_options', 'core-control', array(&$this, 'main_page'));
 	}
 
 	/**
@@ -151,9 +136,8 @@ final class Core_Control {
 		}
 	}
 
-
-
-	function load_modules() {
+	
+	public function get_modules() {
 		$modules = get_option('core_control-active_modules', array());
 		foreach ( (array) $modules as $module ) {
 			if ( 0 !== validate_file($module) )
@@ -164,6 +148,16 @@ final class Core_Control {
 			$class = basename($module, '.php');
 			$this->modules[ $class ] = new $class;
 		}
+	}
+
+	public function get_active_modules() {
+
+	}
+
+
+
+	function admin_menu() {
+		add_submenu_page('tools.php', __('Core Control', 'core-control'), __('Core Control', 'core-control'), 'manage_options', 'core-control', array(&$this, 'main_page'));
 	}
 
 	function is_module_active($module) {
