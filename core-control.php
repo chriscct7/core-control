@@ -294,6 +294,31 @@ final class Core_Control {
 			return false;
 		}
 	}
+
+	/**
+	 * Is valid module ID.
+	 *
+	 * Takes in the id of a module and returns a boolean of if it's a module.
+	 *
+	 * @access public
+	 * @since 1.3.0
+	 *
+	 * @param  string ID of module.
+	 * @return bool   Is module valid.
+	 */
+	public function is_valid_module_id( $id ) {
+		if ( ! empty ( $this->get_modules() ) ) {
+			$modules = $this->get_modules();
+			foreach ( $modules as $module_filename => $module ) {
+				if ( ! empty( $module['id'] ) && $id === $module['id'] ){
+					return true;
+				}
+			}
+			return false; // we didn't find it
+		} else {
+			return false;
+		}
+	}
 	
 	/**
 	 * Outputs Core Control settings pages.
@@ -311,7 +336,7 @@ final class Core_Control {
 			echo '<h2>' . esc_html( __( 'Core Control', 'core-control' ) ) . '</h2>';
 		
 			$current_module = ! empty( $_GET['module'] ) ? $_GET['module'] : '';
-			if ( ! $current_module || ! $this->is_module_active( $current_module ) ) {
+			if ( ! $current_module || ! $this->is_valid_module_id( $current_module ) ) {
 				$current_module = 'default';
 			}
 			
