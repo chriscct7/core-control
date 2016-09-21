@@ -204,6 +204,32 @@ final class Core_Control {
 		return $files;
 	}
 
-}//end class
+}
 
-?>
+/**
+ * Fired when the plugin is activated.
+ *
+ * @access public
+ * @since 1.3.0
+ *
+ * @global int $wp_version      The version of WordPress for this install.
+ * 
+ * @param boolean $network_wide True if WP MS admin uses "Network Activate" action, false otherwise.
+ * @return void
+ */
+function core_control_activation_hook( $network_wide ) {
+
+	global $wp_version;
+	
+	$url = admin_url( 'plugins.php' );
+	// Check for MS dashboard
+	if ( is_network_admin() ) {
+		$url = network_admin_url( 'plugins.php' );
+	}
+	
+	if ( version_compare( $wp_version, '3.2', '<' ) ) {
+		deactivate_plugins( plugin_basename( __FILE__ ) );
+		wp_die( sprintf( __( 'Sorry, but your version of WordPress does not meet Core Control\'s required version of %1$s3.2%2$s to run properly. The plugin not been activated. %3$sClick here to return to the Dashboard%4$s.', 'core-control' ), '<strong>', '</strong>', '<a href="' . $url . '">"', '</a>' ) );
+	}
+}
+register_activation_hook( __FILE__, 'core_control_activation_hook' );
